@@ -1,0 +1,1766 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Aionis API",
+    "version": "v1",
+    "description": "Public API surface for Aionis memory, policy, replay, and sandbox workflows."
+  },
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+  "servers": [
+    {
+      "url": "https://api.aionis.com",
+      "description": "Production (replace with your deployed base URL)"
+    },
+    {
+      "url": "http://localhost:3001",
+      "description": "Local development"
+    }
+  ],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    },
+    {
+      "BearerAuth": []
+    },
+    {
+      "AdminTokenAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Memory"
+    },
+    {
+      "name": "Policy"
+    },
+    {
+      "name": "Replay"
+    },
+    {
+      "name": "Sandbox"
+    }
+  ],
+  "paths": {
+    "/v1/memory/write": {
+      "post": {
+        "tags": [
+          "Memory"
+        ],
+        "summary": "Write memory nodes and edges",
+        "description": "Writes memory nodes/edges and returns a traceable commit reference.",
+        "operationId": "memoryWrite",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WriteRequest"
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "tenant_id": "default",
+                    "scope": "support",
+                    "input_text": "User asked for invoice copy",
+                    "memory_lane": "shared",
+                    "nodes": [
+                      {
+                        "type": "event",
+                        "memory_lane": "shared",
+                        "text_summary": "User asked for invoice copy"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Write accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WriteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "501": {
+            "$ref": "#/components/responses/Unsupported"
+          }
+        }
+      }
+    },
+    "/v1/memory/recall": {
+      "post": {
+        "tags": [
+          "Memory"
+        ],
+        "summary": "Recall by structured query",
+        "description": "Structured memory recall endpoint documented at group level.",
+        "operationId": "memoryRecall",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GenericRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GenericSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/recall_text": {
+      "post": {
+        "tags": [
+          "Memory"
+        ],
+        "summary": "Recall by plain text",
+        "description": "Performs semantic recall from plain text query and returns compact context payload.",
+        "operationId": "memoryRecallText",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecallTextRequest"
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "tenant_id": "default",
+                    "scope": "support",
+                    "query_text": "invoice copy request",
+                    "limit": 5,
+                    "include_meta": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Recall result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecallTextResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/context/assemble": {
+      "post": {
+        "tags": [
+          "Memory"
+        ],
+        "summary": "Assemble layered context",
+        "description": "Combines recall, optional rules evaluation, and optional tool selection context.",
+        "operationId": "memoryContextAssemble",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContextAssembleRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Layered context",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContextAssembleResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/find": {
+      "post": {
+        "tags": [
+          "Memory"
+        ],
+        "summary": "Find memory entities",
+        "description": "Memory lookup endpoint documented at group level.",
+        "operationId": "memoryFind",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GenericRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GenericSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/resolve": {
+      "post": {
+        "tags": [
+          "Memory"
+        ],
+        "summary": "Resolve Aionis URI",
+        "description": "Resolves canonical URI (node/edge/commit/decision) into concrete object payload.",
+        "operationId": "memoryResolve",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResolveRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Resolved object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResolveResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/rules/evaluate": {
+      "post": {
+        "tags": [
+          "Policy"
+        ],
+        "summary": "Evaluate rules",
+        "description": "Evaluates active and optional shadow rules against runtime context.",
+        "operationId": "policyRulesEvaluate",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RulesEvaluateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Evaluation result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RulesEvaluateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/tools/select": {
+      "post": {
+        "tags": [
+          "Policy"
+        ],
+        "summary": "Select tool under policy",
+        "description": "Applies policy to candidate tools and persists decision provenance.",
+        "operationId": "policyToolsSelect",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ToolsSelectRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool selection result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ToolsSelectResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/tools/decision": {
+      "post": {
+        "tags": [
+          "Policy"
+        ],
+        "summary": "Persist tool decision",
+        "description": "Decision endpoint documented at group level.",
+        "operationId": "policyToolsDecision",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GenericRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GenericSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/tools/run": {
+      "post": {
+        "tags": [
+          "Policy"
+        ],
+        "summary": "Run selected tool",
+        "description": "Tool execution endpoint documented at group level.",
+        "operationId": "policyToolsRun",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GenericRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GenericSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/tools/feedback": {
+      "post": {
+        "tags": [
+          "Policy"
+        ],
+        "summary": "Submit policy feedback",
+        "description": "Closed-loop feedback endpoint for policy tuning.",
+        "operationId": "policyToolsFeedback",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GenericRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GenericSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/replay/run/start": {
+      "post": {
+        "tags": [
+          "Replay"
+        ],
+        "summary": "Start replay run",
+        "operationId": "replayRunStart",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GenericRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GenericSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/replay/step/before": {
+      "post": {
+        "tags": [
+          "Replay"
+        ],
+        "summary": "Record replay step before",
+        "operationId": "replayStepBefore",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GenericRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GenericSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/replay/step/after": {
+      "post": {
+        "tags": [
+          "Replay"
+        ],
+        "summary": "Record replay step after",
+        "operationId": "replayStepAfter",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GenericRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GenericSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/replay/run/end": {
+      "post": {
+        "tags": [
+          "Replay"
+        ],
+        "summary": "End replay run",
+        "operationId": "replayRunEnd",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GenericRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GenericSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/replay/runs/get": {
+      "post": {
+        "tags": [
+          "Replay"
+        ],
+        "summary": "Get replay run timeline",
+        "description": "Reads replay run timeline with optional steps and artifacts.",
+        "operationId": "replayRunsGet",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplayRunsGetRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Replay timeline",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReplayRunsGetResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/replay/playbooks/compile_from_run": {
+      "post": {
+        "tags": [
+          "Replay"
+        ],
+        "summary": "Compile playbook from run",
+        "operationId": "replayPlaybookCompileFromRun",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GenericRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GenericSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/replay/playbooks/get": {
+      "post": {
+        "tags": [
+          "Replay"
+        ],
+        "summary": "Get replay playbook",
+        "operationId": "replayPlaybookGet",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GenericRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GenericSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/replay/playbooks/promote": {
+      "post": {
+        "tags": [
+          "Replay"
+        ],
+        "summary": "Promote replay playbook",
+        "operationId": "replayPlaybookPromote",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GenericRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GenericSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/replay/playbooks/repair": {
+      "post": {
+        "tags": [
+          "Replay"
+        ],
+        "summary": "Repair replay playbook",
+        "operationId": "replayPlaybookRepair",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GenericRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GenericSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/replay/playbooks/repair/review": {
+      "post": {
+        "tags": [
+          "Replay"
+        ],
+        "summary": "Review replay repair",
+        "operationId": "replayPlaybookRepairReview",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GenericRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GenericSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/replay/playbooks/run": {
+      "post": {
+        "tags": [
+          "Replay"
+        ],
+        "summary": "Run replay playbook",
+        "operationId": "replayPlaybookRun",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GenericRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GenericSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/sandbox/sessions": {
+      "post": {
+        "tags": [
+          "Sandbox"
+        ],
+        "summary": "Create sandbox session",
+        "operationId": "sandboxCreateSession",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GenericRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GenericSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/sandbox/execute": {
+      "post": {
+        "tags": [
+          "Sandbox"
+        ],
+        "summary": "Execute sandbox command",
+        "operationId": "sandboxExecute",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GenericRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GenericSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/sandbox/runs/get": {
+      "post": {
+        "tags": [
+          "Sandbox"
+        ],
+        "summary": "Get sandbox run",
+        "operationId": "sandboxRunsGet",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GenericRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GenericSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/sandbox/runs/logs": {
+      "post": {
+        "tags": [
+          "Sandbox"
+        ],
+        "summary": "Get sandbox run logs",
+        "operationId": "sandboxRunsLogs",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GenericRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GenericSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/sandbox/runs/artifact": {
+      "post": {
+        "tags": [
+          "Sandbox"
+        ],
+        "summary": "Get sandbox artifact",
+        "operationId": "sandboxRunsArtifact",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GenericRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GenericSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/v1/memory/sandbox/runs/cancel": {
+      "post": {
+        "tags": [
+          "Sandbox"
+        ],
+        "summary": "Cancel sandbox run",
+        "operationId": "sandboxRunsCancel",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GenericRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GenericSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-Api-Key",
+        "description": "Primary data-plane auth mode."
+      },
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Bearer token auth via Authorization header."
+      },
+      "AdminTokenAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-Admin-Token",
+        "description": "Admin/control-plane auth for privileged workflows."
+      }
+    },
+    "requestBodies": {
+      "GenericRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/GenericObjectRequest"
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "GenericSuccess": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/GenericEnvelope"
+            }
+          }
+        }
+      },
+      "BadRequest": {
+        "description": "Invalid request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "Forbidden",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "TooManyRequests": {
+        "description": "Rate limited",
+        "headers": {
+          "Retry-After": {
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional retry delay in seconds."
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "Unsupported": {
+        "description": "Backend capability unsupported",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "MemoryLane": {
+        "type": "string",
+        "enum": [
+          "private",
+          "shared"
+        ]
+      },
+      "WriteNode": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "event"
+          },
+          "memory_lane": {
+            "$ref": "#/components/schemas/MemoryLane"
+          },
+          "text_summary": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "additionalProperties": true
+      },
+      "WriteEdge": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      },
+      "WriteRequest": {
+        "type": "object",
+        "properties": {
+          "tenant_id": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "actor": {
+            "type": "string"
+          },
+          "input_text": {
+            "type": "string"
+          },
+          "input_sha256": {
+            "type": "string"
+          },
+          "memory_lane": {
+            "$ref": "#/components/schemas/MemoryLane"
+          },
+          "nodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WriteNode"
+            }
+          },
+          "edges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WriteEdge"
+            }
+          }
+        },
+        "anyOf": [
+          {
+            "required": [
+              "input_text"
+            ]
+          },
+          {
+            "required": [
+              "input_sha256"
+            ]
+          }
+        ],
+        "additionalProperties": true
+      },
+      "WriteResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/GenericEnvelope"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "commit_id": {
+                    "type": "string"
+                  },
+                  "commit_uri": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              },
+              "warnings": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        ]
+      },
+      "RecallTextRequest": {
+        "type": "object",
+        "properties": {
+          "tenant_id": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "query_text": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200,
+            "default": 30
+          },
+          "neighborhood_hops": {
+            "type": "integer",
+            "enum": [
+              1,
+              2
+            ],
+            "default": 2
+          },
+          "include_meta": {
+            "type": "boolean"
+          },
+          "include_slots": {
+            "type": "boolean"
+          },
+          "context_token_budget": {
+            "type": "integer"
+          },
+          "context_char_budget": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "query_text"
+        ],
+        "additionalProperties": true
+      },
+      "RecallTextResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/GenericEnvelope"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "context": {
+                    "type": "string"
+                  },
+                  "candidates": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                },
+                "additionalProperties": true
+              },
+              "trajectory": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "observability": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        ]
+      },
+      "ContextAssembleRequest": {
+        "type": "object",
+        "properties": {
+          "tenant_id": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "query_text": {
+            "type": "string"
+          },
+          "context": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "include_rules": {
+            "type": "boolean",
+            "default": true
+          },
+          "tool_candidates": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "return_layered_context": {
+            "type": "boolean",
+            "default": true
+          },
+          "context_layers": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "query_text"
+        ],
+        "additionalProperties": true
+      },
+      "ContextAssembleResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/GenericEnvelope"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "query": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "recall": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "rules": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "tools": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "layered_context": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        ]
+      },
+      "RulesEvaluateRequest": {
+        "type": "object",
+        "properties": {
+          "tenant_id": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "context": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "include_shadow": {
+            "type": "boolean",
+            "default": true
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200,
+            "default": 50
+          }
+        },
+        "required": [
+          "context"
+        ],
+        "additionalProperties": true
+      },
+      "RulesEvaluateResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/GenericEnvelope"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "considered": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              },
+              "matched": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              },
+              "applied": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "agent_visibility_summary": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        ]
+      },
+      "ToolsSelectRequest": {
+        "type": "object",
+        "properties": {
+          "tenant_id": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "run_id": {
+            "type": "string"
+          },
+          "context": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "candidates": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "include_shadow": {
+            "type": "boolean",
+            "default": false
+          },
+          "rules_limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200,
+            "default": 50
+          },
+          "strict": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "context",
+          "candidates"
+        ],
+        "additionalProperties": true
+      },
+      "ToolsSelectResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/GenericEnvelope"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "selection": {
+                "type": "object",
+                "properties": {
+                  "selected": {
+                    "type": "string"
+                  },
+                  "allowed": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "additionalProperties": true
+              },
+              "rules": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "decision": {
+                "type": "object",
+                "properties": {
+                  "decision_id": {
+                    "type": "string"
+                  },
+                  "decision_uri": {
+                    "type": "string"
+                  },
+                  "run_id": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              }
+            }
+          }
+        ]
+      },
+      "ResolveRequest": {
+        "type": "object",
+        "properties": {
+          "tenant_id": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "uri": {
+            "type": "string"
+          },
+          "include_meta": {
+            "type": "boolean"
+          },
+          "include_slots": {
+            "type": "boolean"
+          },
+          "include_slots_preview": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "uri"
+        ],
+        "additionalProperties": true
+      },
+      "ResolveResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/GenericEnvelope"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "uri": {
+                "type": "string"
+              },
+              "resolved_type": {
+                "type": "string"
+              },
+              "resolved": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        ]
+      },
+      "ReplayRunsGetRequest": {
+        "type": "object",
+        "properties": {
+          "tenant_id": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "run_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "include_steps": {
+            "type": "boolean",
+            "default": true
+          },
+          "include_artifacts": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "run_id"
+        ],
+        "additionalProperties": true
+      },
+      "ReplayRunsGetResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/GenericEnvelope"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "run": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "timeline": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              },
+              "steps": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              },
+              "artifacts": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        ]
+      },
+      "GenericObjectRequest": {
+        "type": "object",
+        "properties": {
+          "tenant_id": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "run_id": {
+            "type": "string"
+          },
+          "decision_id": {
+            "type": "string"
+          },
+          "commit_uri": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      },
+      "GenericEnvelope": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "ok"
+          },
+          "request_id": {
+            "type": "string"
+          },
+          "tenant_id": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Machine-readable error code."
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable error message."
+          },
+          "details": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "request_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "error",
+          "message"
+        ],
+        "additionalProperties": true
+      }
+    }
+  }
+}
