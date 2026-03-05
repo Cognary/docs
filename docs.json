@@ -1,122 +1,141 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Aionis Docs",
+  "description": "Execution memory infrastructure for production AI agents",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#18e299"
   },
-  "favicon": "/favicon.svg",
+  "seo": {
+    "metatags": {
+      "canonical": "https://doc.aionisos.com"
+    },
+    "indexing": "navigable"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/Cognary/Aionis"
+      }
+    ],
+    "primary": {
+      "type": "github",
+      "href": "https://github.com/Cognary/Aionis"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/Cognary/Aionis",
+      "website": "https://doc.aionisos.com"
+    }
+  },
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Guide",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Start",
             "pages": [
               "index",
-              "quickstart",
-              "development"
+              "guide/00-overview",
+              "guide/10-role-based-paths",
+              "guide/01-start-here",
+              "guide/02-core-concepts",
+              "guide/03-memory-policy-loop"
             ]
           },
           {
-            "group": "Customization",
+            "group": "Build",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "guide/04-api-guide",
+              "guide/05-sdk-guide",
+              "guide/06-integrations"
             ]
           },
           {
-            "group": "Writing content",
+            "group": "Operate",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
+              "guide/07-operations-and-gates",
+              "guide/08-deploy",
+              "guide/09-troubleshooting"
             ]
           },
           {
-            "group": "AI tools",
+            "group": "Tutorials",
             "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "guide/tutorials/index",
+              "guide/tutorials/env-template",
+              "guide/tutorials/agent-integration",
+              "guide/tutorials/incident-replay",
+              "guide/tutorials/release-gate",
+              "guide/tutorials/policy-tuning"
             ]
           }
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "API",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "API Reference",
             "pages": [
-              "api-reference/introduction"
+              "api-reference/index",
+              "api-reference/authentication",
+              "api-reference/memory",
+              "api-reference/policy",
+              "api-reference/replay",
+              "api-reference/sandbox",
+              "api-reference/errors"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "Endpoint Schemas",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "api-reference/endpoints/index",
+              "api-reference/endpoints/write",
+              "api-reference/endpoints/recall-text",
+              "api-reference/endpoints/context-assemble",
+              "api-reference/endpoints/rules-evaluate",
+              "api-reference/endpoints/tools-select",
+              "api-reference/endpoints/resolve",
+              "api-reference/endpoints/replay-runs-get"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Operations",
+        "groups": [
+          {
+            "group": "Run in Production",
+            "pages": [
+              "operations/index",
+              "operations/go-live",
+              "operations/monitoring",
+              "operations/incident-response",
+              "operations/runbooks"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Reference",
+        "groups": [
+          {
+            "group": "Reference",
+            "pages": [
+              "reference/index",
+              "reference/configuration",
+              "reference/security",
+              "reference/faq",
+              "reference/changelog",
+              "reference/roadmap"
             ]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
-  },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
-  },
-  "contextual": {
-    "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
+    ]
   }
 }
