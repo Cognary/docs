@@ -2,13 +2,11 @@
 
 This page maps Aionis into common runtime and framework environments.
 
-## Metadata
+## How to use this page
 
-- 📖 6 minutes
-- ⚙️ Completed [API Guide](04-api-guide) or [SDK Guide](05-sdk-guide).
-- 🎯 You can choose and wire the right integration path for your runtime.
-
-
+1. Pick the runtime or toolchain you already use.
+2. Keep the same Aionis execution pattern across every integration.
+3. Validate the integration with one write, one recall, one policy check, and one replayable ID chain.
 
 ## Integration pattern
 
@@ -16,6 +14,17 @@ This page maps Aionis into common runtime and framework environments.
 2. Apply policy before action.
 3. Persist outcomes and feedback after action.
 4. Keep replay IDs across all steps.
+
+## Choose the right path
+
+1. Need a local control plane for tools and experimentation:
+   use [MCP](#mcp) and [Playground](#playground)
+2. Need a UI for operators:
+   use [Ops Console](#ops-console)
+3. Need agent framework orchestration:
+   use [LangGraph and OpenWork](#langgraph-and-openwork)
+4. Need CLI-driven memory workflows:
+   use [OpenClaw](#openclaw)
 
 ## Minimum environment variables
 
@@ -70,3 +79,11 @@ npm run -s langgraph:smoke
 openclaw plugins install @aionis/openclaw
 openclaw aionis-memory bootstrap
 ```
+
+## Integration checklist
+
+1. Every request carries `tenant_id` and `scope`.
+2. Every meaningful write persists at least one recallable node.
+3. Policy-loop calls share the same `run_id`.
+4. The runtime logs `request_id`, `decision_id`, and `commit_uri`.
+5. At least one recent workflow can be replayed from stored identifiers.

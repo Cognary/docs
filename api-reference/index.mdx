@@ -14,6 +14,12 @@ This section documents the public API surface for production integrations.
 2. Use [API Guide](/guide/04-api-guide) for auth, isolation, and integration guardrails.
 3. Use [Operations and Gates](/guide/07-operations-and-gates) for release and incident workflows.
 
+## What this section gives you
+
+1. Group-level intent for each API surface.
+2. The identifiers you must keep if you want reliable replay and incident debugging.
+3. Pointers to contract pages for request and response details.
+
 ## Task to endpoint mapping
 
 1. Persist new execution memory:
@@ -35,6 +41,13 @@ Always persist these fields in logs and telemetry:
 4. `run_id`
 5. `decision_id`
 6. `commit_uri`
+
+## Core request conventions
+
+1. Send `tenant_id` and `scope` on every request unless your environment injects them by policy.
+2. Use one auth mode consistently per environment.
+3. Persist IDs from every response, not only from failures.
+4. Treat `request_id` as mandatory operational metadata.
 
 ## Quick endpoint map
 
@@ -65,3 +78,11 @@ Always persist these fields in logs and telemetry:
 6. [POST /v1/memory/tools/select](/api-reference/endpoints/tools-select)
 7. [POST /v1/memory/resolve](/api-reference/endpoints/resolve)
 8. [POST /v1/memory/replay/runs/get](/api-reference/endpoints/replay-runs-get)
+
+## Suggested reading order
+
+1. [Authentication](/api-reference/authentication)
+2. [Memory APIs](/api-reference/memory)
+3. [Policy APIs](/api-reference/policy)
+4. [Replay APIs](/api-reference/replay)
+5. [Error Model](/api-reference/errors)

@@ -2,13 +2,11 @@
 
 This page defines the production operating baseline.
 
-## Metadata
+## What this page is for
 
-- 📖 7 minutes
-- ⚙️ Running environment with core APIs reachable.
-- 🎯 You can run release gates and use replay for production validation.
-
-
+1. Decide whether a deployment is safe enough to release.
+2. Define the minimum operating evidence for production.
+3. Use replay to debug incidents and verify fixes.
 
 ## Daily checks
 
@@ -31,6 +29,16 @@ curl -sS http://localhost:${PORT:-3001}/v1/memory/rules/evaluate \
   -H 'content-type: application/json' \
   -d '{"tenant_id":"default","scope":"default","context":{"intent":"support_triage"}}' | jq '{matched}'
 ```
+
+## Go-live minimum
+
+Before production traffic, confirm all of the following:
+
+1. Health checks pass from the real deployment environment.
+2. Core production gate completes without blocking failures.
+3. Auth, rate limiting, and tenant isolation are enabled.
+4. One end-to-end workflow produces a complete replay chain.
+5. Operators know where to find logs, metrics, and rollback procedure.
 
 ## Replay Execution
 
@@ -62,3 +70,10 @@ npm run -s e2e:replay-learning-fault-smoke
 npm run -s e2e:replay-learning-retention-smoke
 RUN_REPLAY_LEARNING_SMOKES=true npm run -s regression:oneclick
 ```
+
+## What to archive after a release
+
+1. Gate outputs and health evidence.
+2. The deployment version or commit linked to the release.
+3. At least one replayable workflow trace from the new release.
+4. Any policy changes introduced with the release.

@@ -1,5 +1,7 @@
 # Authentication
 
+This page defines how clients authenticate to Aionis APIs in production.
+
 ## Supported modes
 
 1. API key via `X-Api-Key`.
@@ -11,6 +13,7 @@
 1. Use API keys or JWT in data-plane traffic.
 2. Keep admin token isolated from app/runtime credentials.
 3. Rotate credentials and scope them per environment.
+4. Keep one auth strategy per environment to reduce debugging ambiguity.
 
 ## Example requests
 
@@ -52,6 +55,7 @@ client.recall_text({
 1. `401/403`: invalid header name or invalid credential value.
 2. Mixed auth modes across environments.
 3. Using admin token for normal data-plane calls.
+4. Forgetting to update automation, worker, or replay jobs after credential rotation.
 
 ## Error example and fix
 

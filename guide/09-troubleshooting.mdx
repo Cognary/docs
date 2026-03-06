@@ -1,12 +1,14 @@
 # Troubleshooting
 
+Use this page when the system is reachable but behavior is wrong, incomplete, or unstable.
 
-## Metadata
+## Triage order
 
-- 📖 6 minutes
-- ⚙️ Access to request logs and target environment endpoint.
-- 🎯 You can run fast diagnostics and isolate common integration failures.
-
+1. Confirm the request reached the correct environment and auth mode.
+2. Confirm writes include recallable nodes and explicit isolation fields.
+3. Confirm policy-loop calls share the same `run_id` and required context.
+4. Confirm you can reconstruct the execution path with replay identifiers.
+5. Only then investigate latency, load, or provider-level instability.
 
 ## Authentication failures
 
@@ -80,3 +82,13 @@ curl -sS "$BASE_URL/v1/memory/resolve" \
 ```bash
 npm run -s gate:core:prod -- --base-url "${BASE_URL:-http://localhost:3001}" --scope default
 ```
+
+## Before opening an incident
+
+Collect this minimum evidence:
+
+1. Failing `request_id`
+2. `tenant_id` and `scope`
+3. `run_id` and `decision_id` if the failure involved policy or tool execution
+4. `commit_uri` if memory write behavior is in question
+5. The exact request payload shape, with secrets removed
