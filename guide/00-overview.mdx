@@ -2,56 +2,93 @@
 
 Aionis is execution memory infrastructure for production AI agents.
 
-## Metadata
-
-- 📖 4 minutes
-- ⚙️ Basic understanding of API-based agent applications.
-- 🎯 You can explain where Aionis fits and choose the right reading path.
-- 📝 Where Aionis fits in a production agent stack. · Which problems it solves beyond retrieval. · Which doc path to follow for your role.
-
-
-
 Aionis records what AI agents actually did and allows workflows to be replayed later.
 
-## Why teams use Aionis
+## What Aionis is
 
-Most memory tools optimize only retrieval quality. Production teams also need:
+Aionis sits between your agent runtime and your operational controls. It stores execution memory as durable graph data, helps assemble context for later requests, applies policy before actions run, and preserves the identifiers required to replay the same workflow later.
 
-1. Traceability: identify exactly which request, run, and decision changed behavior.
-2. Control: apply rules before tools/actions are selected.
-3. Replay: reconstruct and verify historical execution paths.
-4. Operability: gate releases with repeatable checks.
+## What makes it different
 
-## Core loop
+Aionis is not just a retrieval layer. It combines memory, policy, provenance, and replay in one operational model. That matters when teams need to answer questions like:
 
-```mermaid
-flowchart LR
-  A["Memory"] --> B["Policy"] --> C["Action"] --> D["Replay"]
-```
+1. What did the agent actually do?
+2. Why was this tool selected?
+3. Which memory write influenced this decision?
+4. Can we replay the same path after a fix or before a release?
+
+## Why Aionis exists
+
+Most memory systems stop at retrieval. Production systems need more than retrieval quality:
+
+1. Traceability across requests, runs, decisions, and commits.
+2. Policy control before tools and actions are executed.
+3. Replay workflows for incidents, regressions, and release evidence.
+4. Operational discipline for rollout and auditability.
 
 ## Key capabilities
 
 1. Verifiable writes with `commit_id` and `commit_uri`.
-2. Context assembly with explicit layer and budget controls.
-3. Policy-loop endpoints for rule evaluation, selection, and feedback.
-4. Decision provenance using `request_id`, `run_id`, `decision_id`, `commit_uri`.
-5. Production gate workflow for safe release rollout.
+2. Context assembly with explicit layers and budgets.
+3. Policy-loop endpoints for evaluation, selection, decision, run, and feedback.
+4. Decision provenance using `request_id`, `run_id`, `decision_id`, and `commit_uri`.
+5. Replay and operational gates for production validation.
 
-## Who should read this
+## Architecture overview
 
-1. Application developers integrating agent memory.
-2. Platform engineers operating multi-tenant agent infrastructure.
-3. AI product teams that need incident replay and decision auditability.
+At a high level, Aionis exposes four developer-facing surfaces:
+
+1. Memory APIs for write, recall, resolve, and context assembly.
+2. Policy APIs for rule evaluation, tool selection, and feedback.
+3. Replay APIs for reconstructing and rerunning historical execution.
+4. Operational gates and evidence workflows for safe promotion.
+
+The typical sequence is:
+
+1. Your app writes execution memory.
+2. Your runtime recalls or assembles context.
+3. Policy is applied before action execution.
+4. Decision and commit identifiers are persisted.
+5. The same identifiers are reused later for debugging and replay.
+
+## When to use Aionis
+
+Use Aionis when you need one or more of these:
+
+1. Agents that must remember prior actions across runs.
+2. Tool selection or execution that must follow explicit rules.
+3. Incident debugging that depends on reconstructing a run path.
+4. Release workflows that require replay evidence before promotion.
+
+## When not to use Aionis
+
+You likely do not need Aionis if your system is:
+
+1. A single-session prototype with no audit or debugging requirements.
+2. A stateless demo where prompt history is enough.
+3. A workflow where no one needs to trace why a tool was chosen.
+
+## The minimum mental model
+
+Think of Aionis as four connected layers:
+
+1. Memory records what happened.
+2. Context assembly prepares what the next step should see.
+3. Policy constrains what actions are allowed or preferred.
+4. Replay proves what happened and lets you verify it later.
+
+## Recommended reading order
+
+1. [Start Here](01-start-here)
+2. [Core Concepts](02-core-concepts)
+3. [Memory and Policy Loop](03-memory-policy-loop)
+4. [API Guide](04-api-guide)
+5. [Operations and Gates](07-operations-and-gates)
 
 ## Role-based reading paths
 
-For role-specific reading orders, use:
-
-- [Role-based Paths](10-role-based-paths)
-
-For step-by-step implementation tasks, use:
-
-- [Tutorial: Integrate One Agent End-to-End](tutorials/agent-integration)
-- [Tutorial: Incident Replay for a Production Failure](tutorials/incident-replay)
-- [Tutorial: Release Gate with Replay Evidence](tutorials/release-gate)
-- [Tutorial: Policy Tuning with Closed-loop Feedback](tutorials/policy-tuning)
+1. [Role-based Paths](10-role-based-paths)
+2. [Tutorial: Integrate One Agent End-to-End](tutorials/agent-integration)
+3. [Tutorial: Incident Replay for a Production Failure](tutorials/incident-replay)
+4. [Tutorial: Release Gate with Replay Evidence](tutorials/release-gate)
+5. [Tutorial: Policy Tuning with Closed-loop Feedback](tutorials/policy-tuning)

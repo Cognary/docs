@@ -1,31 +1,72 @@
 # Aionis
 
-Execution memory infrastructure for production AI agents.
-
 Aionis records what AI agents actually did and allows workflows to be replayed later.
 
-## Start here
+Execution memory and replay infrastructure for production AI agents. Use Aionis when prompt traces and ad hoc logs are no longer enough to explain agent behavior in production.
 
-1. New to Aionis: [Overview](/guide/00-overview)
-2. First integration path: [Start Here](/guide/01-start-here)
-3. System model: [Core Concepts](/guide/02-core-concepts)
-4. Production loop: [Memory and Policy Loop](/guide/03-memory-policy-loop)
+## Who this documentation is for
 
-## Build and integrate
+This docs set is for teams shipping AI agents into real environments, where memory quality, tool decisions, incident debugging, and release safety all matter. It is written for developers, platform engineers, and operators who need to integrate Aionis and keep it reliable after launch.
 
-1. Integration contract: [API Guide](/guide/04-api-guide)
-2. SDK usage: [SDK Guide](/guide/05-sdk-guide)
-3. Framework setup: [Integrations](/guide/06-integrations)
-4. Full endpoint coverage: [API Reference](/api-reference/)
+## What Aionis gives you
 
-## Operate in production
+1. Durable execution memory with explicit commit lineage.
+2. Context assembly for bounded planner and runtime inputs.
+3. Policy-aware tool selection with decision provenance.
+4. Replay workflows for incident debugging, regression checks, and release evidence.
 
-1. Reliability controls: [Operations and Gates](/guide/07-operations-and-gates)
-2. Deployment checklist: [Deploy](/guide/08-deploy)
-3. Incident handling: [Operations](/operations/)
-4. Known fixes: [Troubleshooting](/guide/09-troubleshooting)
+## Core operating model
 
-## Hands-on tutorials
+1. Record what the agent did.
+2. Recall and assemble the right context for the next step.
+3. Apply policy before action execution.
+4. Preserve the IDs needed to inspect or replay the workflow later.
+
+## Choose your starting path
+
+1. Evaluating the product:
+   start with [Overview](/guide/00-overview)
+2. Building the first integration:
+   start with [Start Here](/guide/01-start-here)
+3. Wiring production contracts:
+   use [API Guide](/guide/04-api-guide) and [API Reference](/api-reference/)
+4. Preparing for production:
+   use [Operations](/operations/) and [Operations and Gates](/guide/07-operations-and-gates)
+5. Learning by example:
+   use [Tutorials](/guide/tutorials/)
+
+## What you can accomplish in the first hour
+
+1. Get a local or hosted environment responding to `/health`.
+2. Write and recall a real memory event.
+3. Run the policy flow with a stable `run_id`.
+4. Keep the identifiers needed for replay and incident debugging.
+5. Understand which section to use next for integration, operations, or troubleshooting.
+
+## Documentation map
+
+### Product and onboarding
+
+1. [Overview](/guide/00-overview)
+2. [Start Here](/guide/01-start-here)
+3. [Role-based Paths](/guide/10-role-based-paths)
+
+### Build and integrate
+
+1. [Core Concepts](/guide/02-core-concepts)
+2. [Memory and Policy Loop](/guide/03-memory-policy-loop)
+3. [API Guide](/guide/04-api-guide)
+4. [SDK Guide](/guide/05-sdk-guide)
+5. [Integrations](/guide/06-integrations)
+
+### Operate in production
+
+1. [Operations and Gates](/guide/07-operations-and-gates)
+2. [Deploy](/guide/08-deploy)
+3. [Troubleshooting](/guide/09-troubleshooting)
+4. [Operations Section](/operations/)
+
+### Learn by tutorial
 
 1. [Tutorials Overview](/guide/tutorials/)
 2. [Environment Template](/guide/tutorials/env-template)
@@ -33,3 +74,17 @@ Aionis records what AI agents actually did and allows workflows to be replayed l
 4. [Incident Replay](/guide/tutorials/incident-replay)
 5. [Release Gate](/guide/tutorials/release-gate)
 6. [Policy Tuning](/guide/tutorials/policy-tuning)
+
+## Recommended first success path
+
+1. Read [Overview](/guide/00-overview).
+2. Run [Start Here](/guide/01-start-here).
+3. Implement the runtime sequence from [Memory and Policy Loop](/guide/03-memory-policy-loop).
+4. Use [API Guide](/guide/04-api-guide) and [API Reference](/api-reference/) during integration.
+5. Validate rollout with [Operations and Gates](/guide/07-operations-and-gates).
+
+## If you only read three pages
+
+1. [Overview](/guide/00-overview) for the product model
+2. [Start Here](/guide/01-start-here) for the first working integration
+3. [Operations and Gates](/guide/07-operations-and-gates) for the production baseline

@@ -2,7 +2,7 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
   "name": "Aionis Docs",
-  "description": "Execution memory infrastructure for production AI agents",
+  "description": "Execution memory and replay infrastructure for production AI agents",
   "colors": {
     "primary": "#18e299"
   },
@@ -20,11 +20,65 @@
       }
     ],
     "primary": {
-      "type": "github",
-      "href": "https://github.com/Cognary/Aionis"
+      "type": "button",
+      "label": "Quickstart",
+      "href": "/guide/01-start-here"
     }
   },
   "footer": {
+    "links": [
+      {
+        "header": "Docs",
+        "items": [
+          {
+            "label": "Overview",
+            "href": "/guide/00-overview"
+          },
+          {
+            "label": "Quickstart",
+            "href": "/guide/01-start-here"
+          },
+          {
+            "label": "API Reference",
+            "href": "/api-reference"
+          }
+        ]
+      },
+      {
+        "header": "Operations",
+        "items": [
+          {
+            "label": "Go-live",
+            "href": "/operations/go-live"
+          },
+          {
+            "label": "Incident Response",
+            "href": "/operations/incident-response"
+          },
+          {
+            "label": "FAQ",
+            "href": "/reference/faq"
+          }
+        ]
+      },
+      {
+        "header": "Tutorials",
+        "items": [
+          {
+            "label": "Agent Integration",
+            "href": "/guide/tutorials/agent-integration"
+          },
+          {
+            "label": "Incident Replay",
+            "href": "/guide/tutorials/incident-replay"
+          },
+          {
+            "label": "Release Gate",
+            "href": "/guide/tutorials/release-gate"
+          }
+        ]
+      }
+    ],
     "socials": {
       "github": "https://github.com/Cognary/Aionis",
       "website": "https://doc.aionisos.com"
@@ -36,19 +90,19 @@
         "tab": "Guide",
         "groups": [
           {
-            "group": "Start",
+            "group": "Get Started",
             "pages": [
               "index",
               "guide/00-overview",
-              "guide/10-role-based-paths",
               "guide/01-start-here",
-              "guide/02-core-concepts",
-              "guide/03-memory-policy-loop"
+              "guide/10-role-based-paths"
             ]
           },
           {
-            "group": "Build",
+            "group": "Build and Integrate",
             "pages": [
+              "guide/02-core-concepts",
+              "guide/03-memory-policy-loop",
               "guide/04-api-guide",
               "guide/05-sdk-guide",
               "guide/06-integrations"
@@ -77,10 +131,9 @@
       },
       {
         "tab": "API",
-        "openapi": "/api-reference/openapi.json",
         "groups": [
           {
-            "group": "API Reference",
+            "group": "Core APIs",
             "pages": [
               "api-reference/index",
               "api-reference/authentication",
@@ -92,7 +145,7 @@
             ]
           },
           {
-            "group": "Endpoint Schemas",
+            "group": "Endpoint Reference",
             "pages": [
               "api-reference/endpoints/index",
               "api-reference/endpoints/write",

@@ -1,5 +1,7 @@
 # Memory APIs
 
+Memory APIs persist execution history and reconstruct useful context for future runs.
+
 ## Endpoints
 
 > `POST /v1/memory/write`
@@ -14,6 +16,14 @@
 1. Include recallable `nodes` in write payload.
 2. `input_text` does not create nodes automatically.
 3. Empty-node writes may return `warnings[].code=write_no_nodes`.
+
+## When to use each endpoint
+
+1. `write` when an agent step produced information worth keeping.
+2. `recall` or `recall_text` when you need relevant prior context before the next step.
+3. `context/assemble` when you want the server to combine retrieval into prompt-ready context.
+4. `find` when you already know structured fields to query.
+5. `resolve` when you have a URI or commit identifier and need the underlying object.
 
 ## Minimal write + recall
 
@@ -64,6 +74,13 @@ curl -sS "$BASE_URL/v1/memory/recall_text" \
 3. `scope`
 4. `commit_id`
 5. `commit_uri`
+
+## Common mistakes
+
+1. Writing only `input_text` and expecting retrieval to work.
+2. Mixing `memory_lane` values without a retrieval strategy.
+3. Omitting `tenant_id` or `scope` and then debugging the wrong dataset.
+4. Not storing `commit_uri`, which later blocks replay and audit work.
 
 ## Error example and fix
 

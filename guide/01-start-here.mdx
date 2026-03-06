@@ -2,14 +2,25 @@
 
 This page gets you to a working Aionis integration in minutes.
 
-## Metadata
+## What you will do
 
-- 📖 8 minutes
-- ⚙️ Docker and Docker Compose., Node.js `>=18`., `curl` and `jq`.
-- 🎯 You can run Aionis and validate first write/recall integration.
-- 📝 Run Aionis locally. · Perform a recallable write. · Verify retrieval and replay-ready IDs.
+1. Run Aionis locally or point to a hosted environment.
+2. Write one recallable memory event.
+3. Recall that memory by text.
+4. Capture the identifiers you will need later for replay and debugging.
+5. Leave this page with one verified end-to-end success path.
 
+## Before you start
 
+1. Docker and Docker Compose for local setup.
+2. Node.js `>=18` if you plan to run repository scripts.
+3. `curl` and `jq` for the validation steps below.
+
+## Choose your path
+
+1. Use the local quickstart if you want the fastest hands-on validation from this repository.
+2. Use the hosted quickstart if you already have a running Aionis environment and credentials.
+3. If you are evaluating the product instead of integrating today, read [Overview](00-overview) first and come back here.
 
 ## End-to-end flow
 
@@ -24,13 +35,15 @@ flowchart LR
 
 ## Local quickstart
 
+Clone and configure the repository:
+
 ```bash
 git clone https://github.com/Cognary/Aionis.git
 cd Aionis
 cp .env.example .env
 ```
 
-Recommended local `.env` values:
+Use these local `.env` defaults for a first smoke path:
 
 ```bash
 PORT=3001
@@ -38,14 +51,14 @@ MEMORY_AUTH_MODE=off
 EMBEDDING_PROVIDER=fake
 ```
 
-Start the stack:
+Start the stack and confirm health:
 
 ```bash
 make stack-up
 curl -fsS http://localhost:3001/health | jq
 ```
 
-Write and recall:
+Write one recallable event and verify recall:
 
 ```bash
 curl -sS http://localhost:3001/v1/memory/write \
@@ -63,13 +76,15 @@ curl -sS http://localhost:3001/v1/memory/recall_text \
   -d '{"tenant_id":"default","scope":"default","query_text":"preferred follow-up channel","limit":5}' | jq
 ```
 
-Stop services:
+Stop services when finished:
 
 ```bash
 make stack-down
 ```
 
 ## Hosted quickstart
+
+If you already have a hosted Aionis environment, use the same validation path:
 
 ```bash
 export BASE_URL="https://api.your-domain.com"
@@ -89,8 +104,24 @@ curl -sS "$BASE_URL/v1/memory/write" \
   }' | jq
 ```
 
-## Success criteria
+## What success looks like
 
 1. `/health` returns healthy status.
 2. `write` returns `request_id` and commit fields.
-3. `recall_text` returns candidate/context data.
+3. `recall_text` returns candidate or context data.
+4. You can identify which IDs to keep for later replay and debugging.
+
+## What to persist from your first run
+
+1. `request_id`
+2. `tenant_id`
+3. `scope`
+4. `data.commit_id`
+5. `data.commit_uri`
+
+## What to read next
+
+1. [Core Concepts](02-core-concepts)
+2. [Memory and Policy Loop](03-memory-policy-loop)
+3. [API Guide](04-api-guide)
+4. [SDK Guide](05-sdk-guide) if you do not want to stay at raw HTTP level

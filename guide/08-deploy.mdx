@@ -2,13 +2,11 @@
 
 This page describes migration from local runtime to production HA.
 
-## Metadata
+## What this page covers
 
-- 📖 6 minutes
-- ⚙️ Basic familiarity with your deployment platform and database operations.
-- 🎯 You can execute a safer standalone-to-HA deployment path.
-
-
+1. The deployment shape from local development to HA production.
+2. The minimum configuration required before live traffic.
+3. A practical cutover and rollback sequence.
 
 ## Deployment tiers
 
@@ -51,3 +49,13 @@ DATABASE_URL=postgres://<user>:<pass>@<managed-postgres-host>:5432/<db>
 1. Shift traffic to last known-good release.
 2. Preserve failed release artifacts for audit.
 3. Re-run core health and consistency checks.
+
+## Post-deploy verification
+
+Immediately after deployment:
+
+1. Run a fresh `write` and `recall_text` request in the target environment.
+2. Run one policy evaluation request with a real `run_id`.
+3. Confirm logs contain `request_id`, `decision_id`, and `commit_uri`.
+4. Confirm dashboards show stable error rate and latency.
+5. Capture one replayable execution path before declaring success.
